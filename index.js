@@ -18,11 +18,23 @@ let currentMaxId = 0;
 //     }
 // );
 
+app.use(cors);
+
 // Calling the express.json() method for parsing
 app.use(express.json());
 
+// CORS  Cross Origin Resource Sharing
+function cors(req, res, next){
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Headers', '*');
+    res.setHeader('Access-Control-Allow-Methods', '*');
+    next();
+}
+
 //get tasks according to query
 function getAllTasks(req, res, next) {
+    console.log('getAllTasks is called');
+    console.log('req.query =',req.query);
     const {id,description,done} = req.query;
 
     //check the query key is valid or not
@@ -51,6 +63,9 @@ function getAllTasks(req, res, next) {
 
 //find Task by ID, return -1 if not found
 function findTaskByID (id) {
+    console.log('findTaskByID is called');
+    console.log('id= ',id);
+
     // return id && tasks.find((task) => task.id === id);
     if(id) {
         return tasks.findIndex((task) => task.id === id);    
@@ -61,6 +76,9 @@ function findTaskByID (id) {
 
 //find task by description, return -1 if not found
 function findTaskByDescription (description) {
+    console.log('findTaskByDescription is called');
+    console.log('description =',description);
+
     // return id && tasks.find((task) => task.id === id);
     if(description) {
         return tasks.findIndex((task) => task.description === description);    
@@ -70,9 +88,12 @@ function findTaskByDescription (description) {
 }
 
 function getTasksById(req, res, next) {
+    console.log('getTaskById is called');
+    console.log('req.params', req.params);
+
     const {id} = req.params;
     const index = findTaskByID(parseInt(id));
-    console.log(index);
+    // console.log(index);
     if (index != -1){
         res.json(tasks[index]);
     }else{
@@ -81,6 +102,9 @@ function getTasksById(req, res, next) {
 }
 
 function updateTasksById(req, res) {
+    console.log('updateTasksById is called');
+    console.log('req.params =', req.params);
+
     const {id} = req.params;
     const {description, done} = req.body;
     const index = findTaskByID(parseInt(id));
@@ -97,6 +121,8 @@ function updateTasksById(req, res) {
 }
 
 function createNewTaskByDescription(req, res) {
+    console.log('createNewTaskByDescription is called');
+    console.log('reg.boby =', req.body);
     const {description} = req.body;
     //check whether this task with the same descrition exists already
     const index = findTaskByDescription(description);
@@ -118,6 +144,7 @@ function createNewTaskByDescription(req, res) {
 }
 
 function deleteTask (req,res){
+    console.log('deleteTask is called');
     const {id} = req.params;
     const index = findTaskByID(parseInt(id));
     if (index != -1){
