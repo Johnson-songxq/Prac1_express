@@ -1,6 +1,12 @@
 const express = require("express");
+//require('./xxx')
 
 const app = express();
+
+// Calling the express.json() method for parsing
+app.use(express.json());
+app.use(cors);
+
 const tasks = [];
 let currentMaxId = 0;
 
@@ -10,11 +16,6 @@ let currentMaxId = 0;
 //     description: string,
 //     done: boolean,
 // }
-
-app.use(cors);
-
-// Calling the express.json() method for parsing
-app.use(express.json());
 
 // CORS  Cross Origin Resource Sharing
 function cors(req, res, next) {
@@ -28,7 +29,6 @@ function cors(req, res, next) {
 function getAllTasks(req, res, next) {
   //   const { id, description, done } = req.query;
   const { description } = req.query;
-  console.log(req.query);
   let filteredTasks = tasks;
 
   //we don't check the query is valid or not, if not, just return empty task
@@ -123,6 +123,7 @@ function updateTasksById(req, res) {
 
   //update the task
   task.description = description ?? task.description;
+
   if (done != null) {
     //!! convert anthing to boolean
     task.done = !!done;
